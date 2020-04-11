@@ -38,20 +38,30 @@ const useCounter = (initialCount : number): [number, incrementCounter] => {
   ];
 }
 
+interface CounterControlProps {
+  count: number;
+  handleClick: incrementCounter;
+}
+
+const CounterControl : FC<CounterControlProps> = (props) => (
+  <>
+    <Display message='Add it up!' />
+    <div>
+      {
+        [1 ,5, 7, 10, 20, 100].map(increment => (
+          <Button increment={increment} onClick={props.handleClick} />
+        ))
+      }
+    </div>
+    <Display message={props.count} />
+  </>
+);
+
 const App: React.FC = () => {
   const [count, handleClick] = useCounter(12);
 
   return (
-    <>
-      <Display message='Add it up!' />
-      <div>
-        <Button increment={1} onClick={handleClick} />
-        <Button increment={5} onClick={handleClick} />
-        <Button increment={10} onClick={handleClick} />
-        <Button increment={100} onClick={handleClick} />
-      </div>
-      <Display message={count} />
-    </>
+    <CounterControl count={count} handleClick={handleClick}/>
   );
 };
 
