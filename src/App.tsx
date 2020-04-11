@@ -2,20 +2,24 @@ import React, { FC, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+type incrementCounter = (increment: number) => void;
+
 interface ButtonProps {
-  count: number;
-  onClick: () => void;
+  increment: number;
+  onClick: incrementCounter;
 }
 
 const Button: FC<ButtonProps> = (props) => {  
+  const onClick = () => props.onClick(props.increment);
+
   return (
-    <button onClick={props.onClick}>{props.count}</button>
+    <button onClick={onClick}>+{props.increment}</button>
     )
 }
 
-const useCounter = (initialCount : number): [number, () => void] => {
+const useCounter = (initialCount : number): [number, incrementCounter] => {
   const [count, setCount] = useState(initialCount);
-  const handleClick = () => setCount(count + 1);
+  const handleClick = (increment: number) => setCount(count + increment);
 
   return [
     count,
@@ -27,7 +31,15 @@ const App: React.FC = () => {
   const [count, handleClick] = useCounter(12);
 
   return (
-    <Button count={count} onClick={handleClick}/>
+    <>
+      <div>
+        <Button increment={1} onClick={handleClick}/>
+        <Button increment={5} onClick={handleClick}/>
+        <Button increment={10} onClick={handleClick}/>
+        <Button increment={100} onClick={handleClick}/>
+      </div>
+    <div>{count}</div>
+    </>
   );
 };
 
