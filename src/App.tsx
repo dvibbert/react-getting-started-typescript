@@ -17,6 +17,17 @@ const Button: FC<ButtonProps> = (props) => {
     )
 }
 
+interface IDisplayCount {
+  message: number | string;
+}
+const Display: FC<IDisplayCount> = (props) => {
+  return (
+    <div>
+      {props.message}
+    </div>
+  );
+}
+
 const useCounter = (initialCount : number): [number, incrementCounter] => {
   const [count, setCount] = useState(initialCount);
   const handleClick = (increment: number) => setCount(count + increment);
@@ -32,13 +43,14 @@ const App: React.FC = () => {
 
   return (
     <>
+      <Display message='Add it up!' />
       <div>
-        <Button increment={1} onClick={handleClick}/>
-        <Button increment={5} onClick={handleClick}/>
-        <Button increment={10} onClick={handleClick}/>
-        <Button increment={100} onClick={handleClick}/>
+        <Button increment={1} onClick={handleClick} />
+        <Button increment={5} onClick={handleClick} />
+        <Button increment={10} onClick={handleClick} />
+        <Button increment={100} onClick={handleClick} />
       </div>
-    <div>{count}</div>
+      <Display message={count} />
     </>
   );
 };
