@@ -2,18 +2,16 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-const HelloReact = () => {
+const Button = () => {
   return (
-    <div>
-      Goodbye React
-    </div>
-  )
+    <button>Test</button>
+    )
 }
 
 const App: React.FC = () => {
   return (
 
-  <HelloReact />
+  <Button />
   )}
 
 export default App;
