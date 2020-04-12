@@ -1,23 +1,21 @@
 import React, { FC, useState } from 'react';
 import './App.css';
 
-// Color Theme
-const colors = {
-  available: 'lightgray',
-  used: 'lightgreen',
-  wrong: 'lightcoral',
-  candidate: 'deepskyblue',
+enum Status {
+  Available,
+  Used,
+  Wrong,
+  Candidate
 };
 
 interface StarNumberProps {
   count: number
 }
-
 const StarsDisplay: FC<StarNumberProps> = (props) => (
   <>
   {
     utils.range(1, props.count).map(i => (
-    <div className="star" />
+      <div className="star" key={i} />
     ))
   }
   </>
@@ -25,13 +23,47 @@ const StarsDisplay: FC<StarNumberProps> = (props) => (
 
 interface PlayNumberProps {
   choice: number;
+  color: string;
 }
 const PlayNumber: FC<PlayNumberProps> = (props) => (
-    <button className="number">{props.choice}</button>
+    <button 
+      className="number" 
+      key={props.choice}
+      style={ {backgroundColor: props.color} }
+      onClick={() => console.log('Choice', props.choice)} 
+    >
+        {props.choice}
+    </button>
 )
+
+const getStatusColor = (status: Status) => {
+  switch(status) {
+    case(Status.Available): return 'lightgray'
+    case(Status.Used): return 'lightgreen'
+    case(Status.Wrong): return 'lightcoral'
+    case(Status.Candidate): return 'deepskyblue'
+  }
+}
 
 const StarMatch = () => {
   const [stars, setStars] = useState(utils.random(1, 9));
+  const [availableChoices, setAvailableChoices] = useState([2, 4, 6, 9]);
+  const [candidateChoices, setCandidateChoices] = useState([2]); 
+
+  const candidatesAreWrong = utils.sum(candidateChoices) > stars;
+
+  const choiceStatus = (choice: number) => {
+  	if (!availableChoices.includes(choice)) {
+    	return Status.Used;
+    }
+    
+    if (candidateChoices.includes(choice)) {
+    	return candidatesAreWrong ? Status.Wrong: Status.Candidate;
+    }
+
+    return Status.Available
+  }
+  
 
   return (
     <div className="game">
@@ -45,7 +77,7 @@ const StarMatch = () => {
         <div className="right">
           {
             utils.range(1, 9).map((i) => (
-              <PlayNumber choice={i} />
+              <PlayNumber key={i} choice={i} color={getStatusColor(choiceStatus(i))} />
             ))
           }
         </div>
