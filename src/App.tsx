@@ -23,14 +23,15 @@ const StarsDisplay: FC<StarNumberProps> = (props) => (
 
 interface PlayNumberProps {
   choice: number;
-  color: string;
+  status: Status;
+  onClick: (choice: number, status: Status) => void
 }
 const PlayNumber: FC<PlayNumberProps> = (props) => (
     <button 
       className="number" 
       key={props.choice}
-      style={ {backgroundColor: props.color} }
-      onClick={() => console.log('Choice', props.choice)} 
+      style={ {backgroundColor: getStatusColor(props.status) } }
+      onClick={() => props.onClick(props.choice, props.status)}
     >
         {props.choice}
     </button>
@@ -46,24 +47,44 @@ const getStatusColor = (status: Status) => {
 }
 
 const StarMatch = () => {
+  const noChoices: number[] = [];
   const [stars, setStars] = useState(utils.random(1, 9));
-  const [availableChoices, setAvailableChoices] = useState([2, 4, 6, 9]);
-  const [candidateChoices, setCandidateChoices] = useState([2]); 
+  const [availableChoices, setAvailableChoices] = useState(utils.range(1, 9));
+  const [candidateChoices, setCandidateChoices] = useState(noChoices); 
 
   const candidatesAreWrong = utils.sum(candidateChoices) > stars;
 
   const choiceStatus = (choice: number) => {
-  	if (!availableChoices.includes(choice)) {
+  	if (!availableChoices.includes(choice))
     	return Status.Used;
-    }
     
-    if (candidateChoices.includes(choice)) {
-    	return candidatesAreWrong ? Status.Wrong: Status.Candidate;
+    if (!candidateChoices.includes(choice)) 
+      return Status.Available;
+    
+    if (candidatesAreWrong)
+      return Status.Wrong;
+    
+    return Status.Candidate;
+  }
+ 
+  const handleChoice = (choice: number, status: Status) => {
+    if (status === Status.Used)
+      return;
+
+    const newCandidates = status === Status.Available
+      ? [choice, ...candidateChoices]
+      : candidateChoices.filter(c => c !== choice);
+    
+    if( utils.sum(newCandidates) !== stars) {
+      setCandidateChoices(newCandidates);
+      return;
     }
 
-    return Status.Available
+    const newAvailable = availableChoices.filter(c => !newCandidates.includes(c)) 
+    setStars(utils.randomSumIn(newAvailable, 9));
+    setCandidateChoices(noChoices);
+    setAvailableChoices(newAvailable);
   }
-  
 
   return (
     <div className="game">
@@ -77,7 +98,7 @@ const StarMatch = () => {
         <div className="right">
           {
             utils.range(1, 9).map((i) => (
-              <PlayNumber key={i} choice={i} color={getStatusColor(choiceStatus(i))} />
+              <PlayNumber key={i} choice={i} status={choiceStatus(i)} onClick={handleChoice} />
             ))
           }
         </div>
