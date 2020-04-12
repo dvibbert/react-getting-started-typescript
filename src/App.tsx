@@ -9,6 +9,27 @@ const colors = {
   candidate: 'deepskyblue',
 };
 
+interface StarNumberProps {
+  count: number
+}
+
+const StarsDisplay: FC<StarNumberProps> = (props) => (
+  <>
+  {
+    utils.range(1, props.count).map(i => (
+    <div className="star" />
+    ))
+  }
+  </>
+)
+
+interface PlayNumberProps {
+  choice: number;
+}
+const PlayNumber: FC<PlayNumberProps> = (props) => (
+    <button className="number">{props.choice}</button>
+)
+
 const StarMatch = () => {
   const [stars, setStars] = useState(utils.random(1, 9));
 
@@ -19,16 +40,12 @@ const StarMatch = () => {
       </div>
       <div className="body">
         <div className="left">
-          {
-            utils.range(1, stars).map(i => (
-              <div className="star" />
-            ))
-          }
+          <StarsDisplay count={stars} />
         </div>
         <div className="right">
           {
-            utils.range(1, 9).map( i => (
-              <button className="number">{i}</button>
+            utils.range(1, 9).map((i) => (
+              <PlayNumber choice={i} />
             ))
           }
         </div>
