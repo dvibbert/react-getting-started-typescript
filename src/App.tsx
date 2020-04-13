@@ -21,19 +21,19 @@ const StarsDisplay: FC<StarNumberProps> = (props) => (
   </>
 )
 
-interface PlayNumberProps {
+interface IPlayNumberProps {
   choice: number;
   status: Status;
   onClick: (choice: number, status: Status) => void
 }
-const PlayNumber: FC<PlayNumberProps> = (props) => (
+const PlayNumber: FC<IPlayNumberProps> = (props) => (
     <button 
       className="number" 
       key={props.choice}
       style={ {backgroundColor: getStatusColor(props.status) } }
       onClick={() => props.onClick(props.choice, props.status)}
     >
-        {props.choice}
+        [{props.choice}]
     </button>
 )
 
