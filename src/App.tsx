@@ -46,7 +46,7 @@ const getStatusColor = (status: Status) => {
   }
 }
 
-const StarMatch = () => {
+const StarsMatch = () => {
   const noChoices: number[] = [];
   const [stars, setStars] = useState(utils.random(1, 9));
   const [availableChoices, setAvailableChoices] = useState(utils.range(1, 9));
@@ -111,7 +111,7 @@ const StarMatch = () => {
 
 const App: React.FC = () => {
   return (
-    <StarMatch />
+    <StarsMatch />
   );
 };
 
